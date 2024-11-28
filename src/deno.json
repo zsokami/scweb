@@ -1,0 +1,16 @@
+{
+  "fmt": {
+    "lineWidth": 119,
+    "semiColons": false,
+    "singleQuote": true
+  },
+  "lock": false,
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ]
+  }
+}

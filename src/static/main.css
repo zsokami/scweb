@@ -1,0 +1,142 @@
+@font-face {
+  font-family: JetBrainsMono;
+  src: url(JetBrainsMono-Regular.woff2);
+}
+
+@font-face {
+  font-family: JetBrainsMono;
+  src: url(JetBrainsMono-Bold.woff2);
+  font-weight: bold;
+}
+
+*,
+.cm-editor .cm-gutters,
+.cm-editor .cm-lineNumbers,
+.cm-editor .cm-content {
+  font-family: JetBrainsMono;
+  outline: none;
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cm-editor,
+.cm-editor .cm-scroller {
+  flex-grow: 1;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+}
+
+.cm-editor .cm-lineNumbers .cm-gutterElement {
+  padding: 0 0 0 0.5rem;
+  min-width: 0;
+  color: rgba(0, 32, 64, 0.3);
+}
+
+.cm-editor .cm-lineNumbers .cm-activeLineGutter {
+  color: rgba(0, 32, 64, 0.7);
+  background-color: rgba(0, 32, 64, 0.07);
+}
+
+.cm-editor .cm-content .cm-activeLine {
+  background-color: rgba(0, 32, 64, 0.07);
+}
+
+.cm-editor .cm-content .cm-line {
+  padding: 0 1rem;
+}
+
+.cm-editor .cm-content {
+  align-self: stretch;
+  padding: 1rem 0 50vh 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body:not([data-show]) {
+  visibility: hidden;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 0.5rem;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.025), rgba(0, 0, 0, 0));
+  opacity: 0;
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+.scrolled header::after {
+  opacity: 1;
+}
+
+h1 {
+  padding: 0.5rem;
+  color: rgb(0, 64, 128);
+  font-size: 2rem;
+  text-align: center;
+}
+
+#resultRow {
+  display: flex;
+  background-color: rgba(0, 32, 64, 0.1);
+  overflow: hidden;
+}
+
+#result {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+#copy {
+  width: 5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  background-color: rgba(0, 32, 64, 0.17);
+  transition: 0.5s cubic-bezier(0, 0, 0, 1);
+  transition-property: width, background-color;
+}
+
+#copy:active,
+#copy.pending,
+#copy.success,
+#copy.error {
+  background-color: rgba(0, 32, 64, 0.07);
+  width: 8rem;
+}
+
+#copy.pending::after {
+  content: " ✔";
+}
+
+#copy.success::after {
+  content: " ✔";
+  color: green;
+}
+
+#copy.error::after {
+  content: " ✘";
+  color: red;
+}

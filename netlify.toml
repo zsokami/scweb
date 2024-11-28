@@ -1,0 +1,8 @@
+[build]
+  command = "deno run -A build.js"
+  publish = "webroot"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000"
