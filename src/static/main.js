@@ -24,6 +24,7 @@ createEditor({
     clearTimeout(timeout_id_update)
     timeout_id_update = setTimeout(() => {
       url.pathname = state.doc.toString()
+        .trim()
         .replaceAll('|', '%7C')
         .replace(/\s*\n\s*/g, '|')
         .replaceAll('%', '%25')
