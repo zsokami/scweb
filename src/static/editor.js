@@ -9,7 +9,7 @@ import {
   keymap,
   lineNumbers,
   rectangularSelection,
-} from 'https://esm.sh/@codemirror/view@6.28.6'
+} from 'https://esm.sh/@codemirror/view@6.35.0'
 import { EditorState } from 'https://esm.sh/@codemirror/state@6.4.1'
 import { bracketMatching, indentOnInput } from 'https://esm.sh/@codemirror/language@6.10.5'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from 'https://esm.sh/@codemirror/commands@6.7.1'
