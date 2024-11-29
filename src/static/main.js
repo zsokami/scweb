@@ -6,6 +6,7 @@ document.fonts.ready.then(() => {
 
 const el_result = document.querySelector('#result')
 const el_copy = document.querySelector('#copy')
+const el_editor = document.querySelector('#editor')
 
 const url = new URL(`https://${location.hash.slice(1) || 'scs.f5.si'}/`)
 
@@ -14,7 +15,7 @@ el_result.value = url.href
 let timeout_id_update
 
 createEditor({
-  parent: document.body,
+  parent: el_editor,
   onUpdate({ docChanged, state }) {
     if (!docChanged) return
     clearTimeout(timeout_id_update)
@@ -53,8 +54,8 @@ el_copy.addEventListener('click', async () => {
   }
 })
 
-addEventListener('scroll', () => {
-  if (scrollY === 0) {
+el_editor.addEventListener('scroll', () => {
+  if (el_editor.scrollTop === 0) {
     document.body.classList.remove('scrolled')
   } else {
     document.body.classList.add('scrolled')

@@ -21,6 +21,11 @@
   padding: 0;
 }
 
+#editor {
+  overflow-y: auto;
+}
+
+#editor,
 .cm-editor,
 .cm-editor .cm-scroller {
   flex-grow: 1;
@@ -59,7 +64,7 @@
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 body:not([data-show]) {
@@ -67,10 +72,8 @@ body:not([data-show]) {
 }
 
 header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1;
-  background-color: white;
 }
 
 header::after {
