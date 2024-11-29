@@ -55,6 +55,7 @@ el_copy.addEventListener('click', async () => {
     el_copy.classList.add('error')
   } finally {
     el_copy.classList.remove('pending')
+    clearTimeout(timeout_id_remove_success_and_error)
     timeout_id_remove_success_and_error = setTimeout(removeSuccessAndError, 1000)
   }
 })
