@@ -107,12 +107,13 @@ h1 {
 }
 
 #result {
+  width: 0;
   flex: 1;
   padding: 0.5rem;
   font-size: 0.875rem;
 }
 
-#copy {
+#resultRow button {
   width: 5rem;
   font-size: 1rem;
   font-weight: bold;
@@ -122,12 +123,15 @@ h1 {
   transition-property: width, background-color;
 }
 
-#copy:active,
+#resultRow button:active {
+  background-color: rgba(0, 32, 64, 0.07);
+}
+
 #copy.pending,
 #copy.success,
 #copy.error {
   background-color: rgba(0, 32, 64, 0.07);
-  width: 8rem;
+  width: 7rem;
 }
 
 #copy.pending::after {
