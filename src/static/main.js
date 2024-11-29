@@ -1,12 +1,8 @@
 import { createEditor } from './editor.js'
 
-if (document.fonts.status === 'loaded') {
+document.fonts.ready.then(() => {
   document.body.dataset.show = ''
-} else {
-  document.fonts.addEventListener('loadingdone', () => {
-    document.body.dataset.show = ''
-  }, { once: true })
-}
+})
 
 const el_result = document.querySelector('#result')
 const el_copy = document.querySelector('#copy')
