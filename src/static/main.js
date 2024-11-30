@@ -26,7 +26,9 @@ const editor = createEditor({
       url.pathname = state.doc.toString()
         .trim()
         .replaceAll('|', '%7C')
-        .replace(/\s*\n\s*/g, '|')
+        .split(/\s*\n\s*/g)
+        .filter((x) => /^[\w-]+:\/\//.test(x))
+        .join('|')
         .replaceAll('%', '%25')
         .replaceAll('\\', '%5C')
       el_result.value = url.href
