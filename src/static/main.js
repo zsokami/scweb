@@ -1,4 +1,4 @@
-import { toUnicode } from 'https://esm.sh/punycode@2.3.1'
+import { toUnicode } from "https://cdn.jsdelivr.net/npm/punycode@2.3.1/+esm"
 
 import { createEditor } from './editor.js'
 
