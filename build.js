@@ -51,18 +51,39 @@ async function dfs(path, parent, vis) {
     }
     let data = null
     if (ext === '.html' || ext === '.css' || ext === '.js') {
-      data = textEncoder.encode(await replace(
-        Deno.readTextFileSync(`${inDir}/${fullPath}`),
-        /( (?:data-)?(?:href|src)=|\bimport .*| url\()(["'])(?![\w-]*:|\/\/)(.+?)\2| url\((?![\w-]*:|\/\/)(.+?)\)/g,
-        async (_, pre, left, path, path2) => {
-          if (path2) {
-            path2 = await dfs(path2, fullDir, vis)
-            return ` url(${path2})`
-          }
-          path = await dfs(path, fullDir, vis)
-          return pre + left + path + left
-        },
-      ))
+      data = Deno.readTextFileSync(`${inDir}/${fullPath}`)
+      if (ext === '.html') {
+        let replaced = false
+        data = data.replace(/<script>.* fetch\('deno.json'.* import\('\.\/(.*?)'\).*<\/script>/s, (_, path) => {
+          replaced = true
+          return `<script type="module" src="${path}"></script>`
+        })
+        if (replaced) {
+          const { imports, scopes } = JSON.parse(Deno.readTextFileSync(`${inDir}/${fullDir}/deno.json`))
+          data = data.replace(
+            /<\/head>/,
+            `  <script type="importmap">
+${JSON.stringify({ imports, scopes }, null, 2).replace(/^/gm, '    ')}
+  </script>
+</head>`,
+          )
+        }
+      }
+      data = textEncoder.encode(
+        await replace(
+          data,
+          /( (?:data-)?(?:href|src)=|\bimport .*| url\()(["'])(?![\w-]*:|\/\/)(.+?)\2| url\((?![\w-]*:|\/\/)(.+?)\)/g,
+          async (m, pre, left, path, path2) => {
+            if (path2) {
+              path2 = await dfs(path2, fullDir, vis)
+              return ` url(${path2})`
+            }
+            if (pre.startsWith('import') && !/^\.{0,2}\//.test(path)) return m
+            path = await dfs(path, fullDir, vis)
+            return pre + left + path + left
+          },
+        ),
+      )
     }
     if (fullPath.startsWith('static/')) {
       if (data === null) {

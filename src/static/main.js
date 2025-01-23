@@ -1,5 +1,3 @@
-import { toUnicode } from "https://cdn.jsdelivr.net/npm/punycode@2.3.1/+esm"
-
 import { createEditor } from './editor.js'
 
 document.fonts.ready.then(() => {
@@ -11,26 +9,48 @@ const el_copy = document.querySelector('#copy')
 const el_clash = document.querySelector('#clash')
 const el_editor = document.querySelector('#editor')
 
-const url = new URL(`https://${location.hash.slice(1) || 'scs.f5.si'}/`)
+const url = new URL(`https://${location.hash.slice(1) || 'arx.cc'}/`)
 
 el_result.value = url.href
 
 let timeout_id_update
 
 const editor = createEditor({
+  hint: 'http/s 订阅链接、除 http/s 代理的 uri 或用 base64/base64url 编码的订阅内容，一行一个。' +
+    '获取零节点订阅用 empty，可用于去广告',
   parent: el_editor,
   onUpdate({ docChanged, state }) {
     if (!docChanged) return
     clearTimeout(timeout_id_update)
     timeout_id_update = setTimeout(() => {
-      url.pathname = state.doc.toString()
-        .trim()
-        .replaceAll('|', '%7C')
+      let from = state.doc.toString().trim()
+      if (from === 'empty') {
+        url.pathname = '/empty'
+        url.search = ''
+        el_result.value = url.href
+        return
+      }
+      from = from.replaceAll('|', '%7C')
         .split(/\s*\n\s*/g)
-        .filter((x) => /^[\w-]+:\/\//.test(x))
-        .join('|')
-        .replaceAll('%', '%25')
-        .replaceAll('\\', '%5C')
+        .filter((x) =>
+          /^https?:|^[a-z][a-z0-9.+-]*:\/\/./i.test(x) ||
+          (x.length % 4 !== 1 && /^[-_+/A-Za-z0-9]*={0,2}$/.test(x))
+        )
+      if (from.length === 1 && /^https?:/i.test(from[0])) {
+        try {
+          from = new URL(from[0])
+          url.pathname = '/' + from.origin + from.pathname
+          url.search = from.search
+        } catch {
+          // pass
+        }
+      } else {
+        url.pathname = '/' + from.join('|')
+          .replaceAll('%', '%25')
+          .replaceAll('\\', '%5C')
+          .replace(/^(https?):/i, '$1%3A')
+        url.search = ''
+      }
       el_result.value = url.href
     }, 100)
   },
@@ -77,8 +97,6 @@ function getName() {
     (m = input.match(/^\s*(https?:\/\/gist\.githubusercontent\.com\/+([^/\n]+))\/[^\n]+(?:\s*\n\s*\1\/[^\n]+)*\s*$/))
   ) {
     return m[2] + ' - gist'
-  } else if ((m = input.match(/^\s*(https?:\/\/([^:/?#\n]+))(?:[:/?#][^\n]*)?(?:\s*\n\s*\1(?:[:/?#][^\n]*)?)*\s*$/))) {
-    return toUnicode(m[2])
   }
   return ''
 }
