@@ -9,7 +9,12 @@ const el_copy = document.querySelector('#copy')
 const el_clash = document.querySelector('#clash')
 const el_editor = document.querySelector('#editor')
 
-const url = new URL(`https://${location.hash.slice(1) || 'arx.cc'}/`)
+const url = new URL(
+  location.hash.slice(1).replace(
+    /^(https?:\/*)?(.*)/i,
+    (_, $1, $2) => ($1 || 'https://') + ($2 || 'arx.cc'),
+  ),
+)
 
 el_result.value = url.href
 
