@@ -21,7 +21,7 @@ el_result.value = url.href
 let timeout_id_update
 
 const editor = createEditor({
-  hint: 'http/s 订阅链接、除 http/s 代理的 uri 或用 base64/base64url 编码的订阅内容，一行一个。' +
+  hint: 'http/s 订阅链接、除 http/s 代理的 uri、用 base64/base64url 编码的订阅内容或 Data URL，一行一个。' +
     '获取零节点订阅用 empty，可用于去广告',
   parent: el_editor,
   onUpdate({ docChanged, state }) {
@@ -38,13 +38,13 @@ const editor = createEditor({
       from = from.replaceAll('|', '%7C')
         .split(/\s*\n\s*/g)
         .filter((x) =>
-          /^https?:|^[a-z][a-z0-9.+-]*:\/\/./i.test(x) ||
+          /^(?:https?|data):|^[a-z][a-z0-9.+-]*:\/\/./i.test(x) ||
           (x.length % 4 !== 1 && /^[-_+/A-Za-z0-9]*={0,2}$/.test(x))
         )
-      if (from.length === 1 && /^https?:/i.test(from[0])) {
+      if (from.length === 1 && /^(?:https?|data):/i.test(from[0])) {
         try {
           from = new URL(from[0])
-          url.pathname = '/' + from.origin + from.pathname
+          url.pathname = '/' + (from.protocol === 'data:' ? 'data:' : from.origin) + from.pathname
           url.search = from.search
         } catch {
           // pass
@@ -53,7 +53,7 @@ const editor = createEditor({
         url.pathname = '/' + from.join('|')
           .replaceAll('%', '%25')
           .replaceAll('\\', '%5C')
-          .replace(/^(https?):/i, '$1%3A')
+          .replace(/^(https?|data):/i, '$1%3A')
         url.search = ''
       }
       el_result.value = url.href
